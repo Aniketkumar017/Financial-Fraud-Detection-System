@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analyze Transaction - Fraud Detection</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 240px;
+            background: #111827;
+            color: white;
+            padding: 25px 15px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 35px;
+        }
+
+        .sidebar p {
+            text-align: center;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: -25px;
+            margin-bottom: 30px;
+        }
+
+        .nav-link {
+            display: block;
+            text-decoration: none;
+            color: #d1d5db;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 30px;
+        }
+
+        .topbar {
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            font-size: 27px;
+        }
+
+        .topbar p {
+            color: #6b7280;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        /* FORM CARD */
+
+        .form-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 7px;
+            color: #374151;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #2563eb;
+        }
+
+        .help-text {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 5px;
+        }
+
+        .submit-area {
+            margin-top: 25px;
+        }
+
+        .analyze-btn {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .analyze-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .clear-btn {
+            border: none;
+            background: #6b7280;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .clear-btn:hover {
+            background: #4b5563;
+        }
+
+        /* RESULT */
+
+        .result-card {
+            margin-top: 25px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .result-box {
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 7px;
+        }
+
+        .result-value {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .high {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+
+        .critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .reason-box,
+        .action-box {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+
+        .reason-box h3,
+        .action-box h3 {
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .reason-box ul {
+            padding-left: 20px;
+        }
+
+        .reason-box li {
+            margin-bottom: 7px;
+            font-size: 13px;
+        }
+
+        .action-text {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .error {
+            margin-top: 20px;
+            padding: 12px;
+            background: #fee2e2;
+            color: #991b1b;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2>Fraud Detection</h2>
+
+        <p>Admin Panel</p>
+
+        <a href="{{ url_for('dashboard') }}" class="nav-link">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('prediction') }}" class="nav-link active">
+            Analyze Transaction
+        </a>
+
+        <a href="{{ url_for('transactions') }}" class="nav-link">
+            Transactions
+        </a>
+
+        <a href="{{ url_for('alerts') }}" class="nav-link">
+            Alerts
+        </a>
+
+        <a href="{{ url_for('reports') }}" class="nav-link">
+            Reports
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="nav-link">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <div class="topbar">
+
+            <h1>Analyze Transaction</h1>
+
+            <p>
+                Enter transaction details to calculate fraud probability
+                and risk level.
+            </p>
+
+        </div>
+
+
+        <!-- INPUT FORM -->
+
+        <div class="form-card">
+
+            <h2 class="section-title">
+                Transaction Information
+            </h2>
+
+
+            <form method="POST" action="{{ url_for('prediction') }}">
+
+
+                <div class="form-grid">
+
+
+                    <!-- Transaction Amount -->
+
+                    <div class="form-group">
+
+                        <label for="transaction_amount">
+                            Transaction Amount (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="transaction_amount"
+                            name="transaction_amount"
+                            step="0.01"
+                            min="0"
+                            placeholder="Example: 2500"
+                            value="{{ form_data.get('transaction_amount', '') }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Payment Channel -->
+
+                    <div class="form-group">
+
+                        <label for="payment_channel">
+                            Payment Method
+                        </label>
+
+                        <select
+                            id="payment_channel"
+                            name="payment_channel"
+                            required
+                        >
+
+                            <option value="">
+                                Select Payment Method
+                            </option>
+
+                            <option value="UPI"
+                                {% if form_data.get('payment_channel') == 'UPI' %}selected{% endif %}>
+                                UPI
+                            </option>
+
+                            <option value="Card"
+                                {% if form_data.get('payment_channel') == 'Card' %}selected{% endif %}>
+                                Card
+                            </option>
+
+                            <option value="Net Banking"
+                                {% if form_data.get('payment_channel') == 'Net Banking' %}selected{% endif %}>
+                                Net Banking
+                            </option>
+
+                            <option value="Wallet"
+                                {% if form_data.get('payment_channel') == 'Wallet' %}selected{% endif %}>
+                                Wallet
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Transaction Time -->
+
+                    <div class="form-group">
+
+                        <label for="transaction_time">
+                            Transaction Time
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            id="transaction_time"
+                            name="transaction_time"
+                            value="{{ form_data.get('transaction_time', '') }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Device -->
+
+                    <div class="form-group">
+
+                        <label for="device_type">
+                            Device Type
+                        </label>
+
+                        <select
+                            id="device_type"
+                            name="device_type"
+                            required
+                        >
+
+                            <option value="">
+                                Select Device
+                            </option>
+
+                            <option value="Mobile"
+                                {% if form_data.get('device_type') == 'Mobile' %}selected{% endif %}>
+                                Mobile
+                            </option>
+
+                            <option value="Desktop"
+                                {% if form_data.get('device_type') == 'Desktop' %}selected{% endif %}>
+                                Desktop
+                            </option>
+
+                            <option value="Tablet"
+                                {% if form_data.get('device_type') == 'Tablet' %}selected{% endif %}>
+                                Tablet
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- International -->
+
+                    <div class="form-group">
+
+                        <label for="is_international">
+                            International Transaction
+                        </label>
+
+                        <select
+                            id="is_international"
+                            name="is_international"
+                            required
+                        >
+
+                            <option value="0"
+                                {% if form_data.get('is_international', '0') == '0' %}selected{% endif %}>
+                                No
+                            </option>
+
+                            <option value="1"
+                                {% if form_data.get('is_international') == '1' %}selected{% endif %}>
+                                Yes
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Account Age -->
+
+                    <div class="form-group">
+
+                        <label for="account_age_days">
+                            Account Age (Days)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="account_age_days"
+                            name="account_age_days"
+                            min="0"
+                            placeholder="Example: 450"
+                            value="{{ form_data.get('account_age_days', '') }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Monthly Spend -->
+
+                    <div class="form-group">
+
+                        <label for="avg_monthly_spend">
+                            Average Monthly Spending (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="avg_monthly_spend"
+                            name="avg_monthly_spend"
+                            step="0.01"
+                            min="0"
+                            placeholder="Example: 20000"
+                            value="{{ form_data.get('avg_monthly_spend', '') }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Credit Score -->
+
+                    <div class="form-group">
+
+                        <label for="credit_score_band">
+                            Credit Score Band
+                        </label>
+
+                        <select
+                            id="credit_score_band"
+                            name="credit_score_band"
+                            required
+                        >
+
+                            <option value="">
+                                Select Credit Band
+                            </option>
+
+                            <option value="0"
+                                {% if form_data.get('credit_score_band') == '0' %}selected{% endif %}>
+                                Low
+                            </option>
+
+                            <option value="1"
+                                {% if form_data.get('credit_score_band') == '1' %}selected{% endif %}>
+                                Medium
+                            </option>
+
+                            <option value="2"
+                                {% if form_data.get('credit_score_band') == '2' %}selected{% endif %}>
+                                High
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- KYC -->
+
+                    <div class="form-group">
+
+                        <label for="kyc_level">
+                            KYC Level
+                        </label>
+
+                        <select
+                            id="kyc_level"
+                            name="kyc_level"
+                            required
+                        >
+
+                            <option value="">
+                                Select KYC Level
+                            </option>
+
+                            <option value="0"
+                                {% if form_data.get('kyc_level') == '0' %}selected{% endif %}>
+                                Basic
+                            </option>
+
+                            <option value="1"
+                                {% if form_data.get('kyc_level') == '1' %}selected{% endif %}>
+                                Verified
+                            </option>
+
+                            <option value="2"
+                                {% if form_data.get('kyc_level') == '2' %}selected{% endif %}>
+                                Fully Verified
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Merchant Risk -->
+
+                    <div class="form-group">
+
+                        <label for="merchant_risk_score">
+                            Merchant Risk
+                        </label>
+
+                        <select
+                            id="merchant_risk_score"
+                            name="merchant_risk_score"
+                            required
+                        >
+
+                            <option value="">
+                                Select Merchant Risk
+                            </option>
+
+                            <option value="0.20"
+                                {% if form_data.get('merchant_risk_score') == '0.20' %}selected{% endif %}>
+                                Low
+                            </option>
+
+                            <option value="0.50"
+                                {% if form_data.get('merchant_risk_score') == '0.50' %}selected{% endif %}>
+                                Medium
+                            </option>
+
+                            <option value="0.80"
+                                {% if form_data.get('merchant_risk_score') == '0.80' %}selected{% endif %}>
+                                High
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- IP Risk -->
+
+                    <div class="form-group">
+
+                        <label for="ip_risk_score">
+                            IP Risk
+                        </label>
+
+                        <select
+                            id="ip_risk_score"
+                            name="ip_risk_score"
+                            required
+                        >
+
+                            <option value="">
+                                Select IP Risk
+                            </option>
+
+                            <option value="0.20"
+                                {% if form_data.get('ip_risk_score') == '0.20' %}selected{% endif %}>
+                                Low
+                            </option>
+
+                            <option value="0.50"
+                                {% if form_data.get('ip_risk_score') == '0.50' %}selected{% endif %}>
+                                Medium
+                            </option>
+
+                            <option value="0.80"
+                                {% if form_data.get('ip_risk_score') == '0.80' %}selected{% endif %}>
+                                High
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- 1 Hour Transactions -->
+
+                    <div class="form-group">
+
+                        <label for="txn_count_1h">
+                            Transactions in Last 1 Hour
+                        </label>
+
+                        <input
+                            type="number"
+                            id="txn_count_1h"
+                            name="txn_count_1h"
+                            min="0"
+                            placeholder="Example: 3"
+                            value="{{ form_data.get('txn_count_1h', '') }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- 24 Hour Transactions -->
+
+                    <div class="form-group">
+
+                        <label for="txn_count_24h">
+                            Transactions in Last 24 Hours
+                        </label>
+
+                        <input
+                            type="number"
+                            id="txn_count_24h"
+                            name="txn_count_24h"
+                            min="0"
+                            placeholder="Example: 10"
+                            value="{{ form_data.get('txn_count_24h', '') }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Failed Transactions -->
+
+                    <div class="form-group">
+
+                        <label for="failed_txn_count_24h">
+                            Failed Transactions in Last 24 Hours
+                        </label>
+
+                        <input
+                            type="number"
+                            id="failed_txn_count_24h"
+                            name="failed_txn_count_24h"
+                            min="0"
+                            placeholder="Example: 1"
+                            value="{{ form_data.get('failed_txn_count_24h', '') }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Geo Distance -->
+
+                    <div class="form-group">
+
+                        <label for="geo_distance_from_last_txn">
+                            Distance from Previous Transaction (km)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="geo_distance_from_last_txn"
+                            name="geo_distance_from_last_txn"
+                            step="0.01"
+                            min="0"
+                            placeholder="Example: 25"
+                            value="{{ form_data.get('geo_distance_from_last_txn', '') }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Amount Deviation -->
+
+                    <div class="form-group">
+
+                        <label for="amount_deviation_from_user_mean">
+                            Amount Deviation from User Mean (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="amount_deviation_from_user_mean"
+                            name="amount_deviation_from_user_mean"
+                            step="0.01"
+                            placeholder="Example: 1500"
+                            value="{{ form_data.get('amount_deviation_from_user_mean', '') }}"
+                            required
+                        >
+
+                        <span class="help-text">
+                            Difference between current amount and user's normal transaction amount.
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="submit-area">
+
+                    <button
+                        type="submit"
+                        class="analyze-btn"
+                    >
+                        Analyze Transaction
+                    </button>
+
+                    <button
+                        type="button"
+                        class="clear-btn"
+                        onclick="window.location.href='{{ url_for('prediction') }}';"
+                    >
+                        Clear Form
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+        <!-- RESULT -->
+
+        {% if result %}
+
+        <div class="result-card">
+
+            <h2 class="section-title">
+                Analysis Result
+            </h2>
+
+
+            <div class="result-grid">
+
+
+                <div class="result-box">
+
+                    <div class="result-label">
+                        Fraud Probability
+                    </div>
+
+                    <div class="result-value">
+                        {{ "%.2f"|format(result.fraud_probability * 100) }}%
+                    </div>
+
+                </div>
+
+
+                <div class="result-box">
+
+                    <div class="result-label">
+                        Predicted Fraud
+                    </div>
+
+                    <div class="result-value">
+
+                        {% if result.predicted_fraud == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="result-box">
+
+                    <div class="result-label">
+                        Risk Level
+                    </div>
+
+                    <div>
+
+                        {% if result.risk_level == "Low" %}
+
+                            <span class="risk-badge low">
+                                Low
+                            </span>
+
+                        {% elif result.risk_level == "Medium" %}
+
+                            <span class="risk-badge medium">
+                                Medium
+                            </span>
+
+                        {% elif result.risk_level == "High" %}
+
+                            <span class="risk-badge high">
+                                High
+                            </span>
+
+                        {% else %}
+
+                            <span class="risk-badge critical">
+                                Critical
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- REASONS -->
+
+            <div class="reason-box">
+
+                <h3>
+                    Reasons for Risk
+                </h3>
+
+                {% if result.risk_reasons %}
+
+                    <ul>
+
+                        {% for reason in result.risk_reasons %}
+
+                            <li>
+                                {{ reason }}
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                {% else %}
+
+                    <p style="font-size:13px;">
+                        No major risk signals detected.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- ACTION -->
+
+            <div class="action-box">
+
+                <h3>
+                    Recommended Action
+                </h3>
+
+                <p class="action-text">
+                    {{ result.recommended_action }}
+                </p>
+
+            </div>
+
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ERROR -->
+
+        {% if error %}
+
+            <div class="error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

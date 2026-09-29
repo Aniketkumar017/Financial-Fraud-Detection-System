@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Transaction Details - Fraud Detection</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 240px;
+            background: #111827;
+            color: white;
+            padding: 25px 15px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 35px;
+        }
+
+        .sidebar p {
+            text-align: center;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: -25px;
+            margin-bottom: 30px;
+        }
+
+        .nav-link {
+            display: block;
+            text-decoration: none;
+            color: #d1d5db;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            font-size: 27px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            background: #6b7280;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .back-btn:hover {
+            background: #4b5563;
+        }
+
+        /* MAIN CARD */
+
+        .detail-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+            margin-bottom: 22px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* SUMMARY */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .summary-box {
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        .label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .value {
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        /* RISK */
+
+        .risk-badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .high {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+
+        .critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* INFORMATION GRID */
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .info-item {
+            padding: 13px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+
+        .info-item .label {
+            margin-bottom: 5px;
+        }
+
+        .info-item .value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* REASONS */
+
+        .reason-list {
+            padding-left: 20px;
+        }
+
+        .reason-list li {
+            margin-bottom: 9px;
+            font-size: 13px;
+        }
+
+        .no-reason {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        /* ACTION */
+
+        .action-box {
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        .action-box h3 {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .action-box p {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* REVIEW */
+
+        .review-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .review-form label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .review-form select,
+        .review-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .review-form textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .review-btn {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .review-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 11px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 11px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1000px) {
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+                width: calc(100% - 190px);
+                padding: 20px;
+            }
+
+            .summary-grid,
+            .info-grid,
+            .review-form {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2>Fraud Detection</h2>
+
+        <p>Admin Panel</p>
+
+        <a href="{{ url_for('dashboard') }}" class="nav-link">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('prediction') }}" class="nav-link">
+            Analyze Transaction
+        </a>
+
+        <a href="{{ url_for('transactions') }}" class="nav-link active">
+            Transactions
+        </a>
+
+        <a href="{{ url_for('alerts') }}" class="nav-link">
+            Alerts
+        </a>
+
+        <a href="{{ url_for('reports') }}" class="nav-link">
+            Reports
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="nav-link">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <h1>
+                Transaction Details
+            </h1>
+
+            <a
+                href="{{ url_for('transactions') }}"
+                class="back-btn">
+                ← Back to Transactions
+            </a>
+
+        </div>
+
+
+        {% if message %}
+
+            <div class="success">
+                {{ message }}
+            </div>
+
+        {% endif %}
+
+
+        {% if error %}
+
+            <div class="error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        {% if transaction %}
+
+
+        <!-- SUMMARY -->
+
+        <div class="detail-card">
+
+            <h2 class="section-title">
+                Risk Summary
+            </h2>
+
+            <div class="summary-grid">
+
+
+                <div class="summary-box">
+
+                    <div class="label">
+                        Transaction ID
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.transaction_id }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-box">
+
+                    <div class="label">
+                        Transaction Amount
+                    </div>
+
+                    <div class="value">
+                        ₹{{ "%.2f"|format(transaction.transaction_amount) }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-box">
+
+                    <div class="label">
+                        Fraud Probability
+                    </div>
+
+                    <div class="value">
+                        {{ "%.2f"|format(transaction.fraud_probability * 100) }}%
+                    </div>
+
+                </div>
+
+
+                <div class="summary-box">
+
+                    <div class="label">
+                        Risk Level
+                    </div>
+
+
+                    {% if transaction.risk_level == "Low" %}
+
+                        <span class="risk-badge low">
+                            Low
+                        </span>
+
+                    {% elif transaction.risk_level == "Medium" %}
+
+                        <span class="risk-badge medium">
+                            Medium
+                        </span>
+
+                    {% elif transaction.risk_level == "High" %}
+
+                        <span class="risk-badge high">
+                            High
+                        </span>
+
+                    {% else %}
+
+                        <span class="risk-badge critical">
+                            Critical
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TRANSACTION INFORMATION -->
+
+        <div class="detail-card">
+
+            <h2 class="section-title">
+                Transaction Information
+            </h2>
+
+
+            <div class="info-grid">
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Transaction Time
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.transaction_time }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Customer ID
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.customer_id or "N/A" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Merchant ID
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.merchant_id or "N/A" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Payment Channel
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.payment_channel or "N/A" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Device Type
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.device_type or "N/A" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        International
+                    </div>
+
+                    <div class="value">
+
+                        {% if transaction.is_international == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Account Age
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.account_age_days or 0 }} days
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Average Monthly Spend
+                    </div>
+
+                    <div class="value">
+                        ₹{{ "%.2f"|format(transaction.avg_monthly_spend or 0) }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Credit Score Band
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.credit_score_band or "N/A" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        KYC Level
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.kyc_level or "N/A" }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Merchant Risk Score
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.merchant_risk_score or 0 }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        IP Risk Score
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.ip_risk_score or 0 }}
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- BEHAVIOURAL SIGNALS -->
+
+        <div class="detail-card">
+
+            <h2 class="section-title">
+                Behavioural & Risk Signals
+            </h2>
+
+
+            <div class="info-grid">
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Transactions in Last 1 Hour
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.txn_count_1h or 0 }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Transactions in Last 24 Hours
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.txn_count_24h or 0 }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Failed Transactions
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.failed_txn_count_24h or 0 }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Geo Distance
+                    </div>
+
+                    <div class="value">
+                        {{ transaction.geo_distance_from_last_txn or 0 }} km
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Amount Deviation
+                    </div>
+
+                    <div class="value">
+                        ₹{{ "%.2f"|format(transaction.amount_deviation_from_user_mean or 0) }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="label">
+                        Predicted Fraud
+                    </div>
+
+                    <div class="value">
+
+                        {% if transaction.predicted_fraud == 1 %}
+
+                            <span style="color:#dc2626;">
+                                Yes
+                            </span>
+
+                        {% else %}
+
+                            <span style="color:#16a34a;">
+                                No
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- REASONS -->
+
+        <div class="detail-card">
+
+            <h2 class="section-title">
+                Reasons for Risk
+            </h2>
+
+
+            {% if transaction.risk_reasons %}
+
+                <ul class="reason-list">
+
+                    {% for reason in transaction.risk_reasons %}
+
+                        <li>
+                            {{ reason }}
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p class="no-reason">
+                    No major risk signals detected.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- RECOMMENDED ACTION -->
+
+        <div class="detail-card">
+
+            <h2 class="section-title">
+                Recommended Action
+            </h2>
+
+            <div class="action-box">
+
+                <h3>
+                    System Recommendation
+                </h3>
+
+                <p>
+                    {{ transaction.recommended_action }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- REVIEW -->
+
+        <div class="detail-card">
+
+            <h2 class="section-title">
+                Transaction Review
+            </h2>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('review_transaction', transaction_id=transaction.transaction_id) }}"
+            >
+
+                <div class="review-form">
+
+
+                    <div>
+
+                        <label for="review_status">
+                            Review Status
+                        </label>
+
+                        <select
+                            id="review_status"
+                            name="review_status"
+                            required
+                        >
+
+                            <option value="Pending"
+                                {% if transaction.review_status == "Pending" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Pending
+                            </option>
+
+                            <option value="Reviewed"
+                                {% if transaction.review_status == "Reviewed" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Reviewed
+                            </option>
+
+                            <option value="Blocked"
+                                {% if transaction.review_status == "Blocked" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Blocked
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="reviewed_by">
+                            Reviewed By
+                        </label>
+
+                        <input
+                            type="text"
+                            id="reviewed_by"
+                            name="reviewed_by"
+                            value="{{ transaction.reviewed_by or '' }}"
+                            placeholder="Reviewer name"
+                        >
+
+                    </div>
+
+
+                    <div class="full-width">
+
+                        <label for="review_notes">
+                            Review Notes
+                        </label>
+
+                        <textarea
+                            id="review_notes"
+                            name="review_notes"
+                            placeholder="Enter review notes..."
+                        >{{ transaction.review_notes or '' }}</textarea>
+
+                    </div>
+
+
+                    <div class="full-width">
+
+                        <button
+                            type="submit"
+                            class="review-btn"
+                        >
+                            Save Review
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        {% else %}
+
+            <div class="detail-card">
+
+                <p>
+                    Transaction not found.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

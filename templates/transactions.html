@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Transactions - Financial Fraud Detection</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 240px;
+            background: #111827;
+            color: white;
+            padding: 25px 15px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 35px;
+        }
+
+        .sidebar p {
+            text-align: center;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: -25px;
+            margin-bottom: 30px;
+        }
+
+        .nav-link {
+            display: block;
+            text-decoration: none;
+            color: #d1d5db;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 30px;
+        }
+
+        .topbar {
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            font-size: 27px;
+        }
+
+        .topbar p {
+            color: #6b7280;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        /* CARD */
+
+        .table-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-header h2 {
+            font-size: 18px;
+        }
+
+        .count {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* FILTERS */
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filters input,
+        .filters select {
+            padding: 9px 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            outline: none;
+            font-size: 13px;
+        }
+
+        .filters input {
+            width: 220px;
+        }
+
+        .filters select {
+            width: 150px;
+            background: white;
+        }
+
+        .filters input:focus,
+        .filters select:focus {
+            border-color: #2563eb;
+        }
+
+        /* TABLE */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th {
+            text-align: left;
+            padding: 13px 10px;
+            background: #f9fafb;
+            color: #6b7280;
+            font-size: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 13px 10px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        /* RISK BADGES */
+
+        .risk-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .high {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+
+        .critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* STATUS */
+
+        .status {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pending {
+            color: #d97706;
+        }
+
+        .reviewed {
+            color: #16a34a;
+        }
+
+        .blocked {
+            color: #dc2626;
+        }
+
+        /* BUTTON */
+
+        .details-btn {
+            text-decoration: none;
+            background: #2563eb;
+            color: white;
+            padding: 6px 11px;
+            border-radius: 5px;
+            font-size: 11px;
+        }
+
+        .details-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* EMPTY */
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+                width: calc(100% - 190px);
+                padding: 20px;
+            }
+
+            .filters input {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2>Fraud Detection</h2>
+
+        <p>Admin Panel</p>
+
+        <a href="{{ url_for('dashboard') }}" class="nav-link">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('prediction') }}" class="nav-link">
+            Analyze Transaction
+        </a>
+
+        <a href="{{ url_for('transactions') }}" class="nav-link active">
+            Transactions
+        </a>
+
+        <a href="{{ url_for('alerts') }}" class="nav-link">
+            Alerts
+        </a>
+
+        <a href="{{ url_for('reports') }}" class="nav-link">
+            Reports
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="nav-link">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <h1>Transactions</h1>
+
+            <p>
+                View and review all analyzed transactions.
+            </p>
+
+        </div>
+
+
+        <!-- TABLE CARD -->
+
+        <div class="table-card">
+
+
+            <div class="table-header">
+
+                <h2>
+                    Transaction History
+                </h2>
+
+                <span class="count">
+                    {{ transactions|length }} transactions
+                </span>
+
+            </div>
+
+
+            <!-- FILTERS -->
+
+            <div class="filters">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search Transaction ID..."
+                    onkeyup="filterTransactions()"
+                >
+
+
+                <select
+                    id="riskFilter"
+                    onchange="filterTransactions()"
+                >
+
+                    <option value="all">
+                        All Risk Levels
+                    </option>
+
+                    <option value="Low">
+                        Low
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="High">
+                        High
+                    </option>
+
+                    <option value="Critical">
+                        Critical
+                    </option>
+
+                </select>
+
+
+                <select
+                    id="fraudFilter"
+                    onchange="filterTransactions()"
+                >
+
+                    <option value="all">
+                        All Predictions
+                    </option>
+
+                    <option value="1">
+                        Fraud
+                    </option>
+
+                    <option value="0">
+                        Not Fraud
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TABLE -->
+
+            <div class="table-wrapper">
+
+                <table id="transactionTable">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Transaction ID
+                            </th>
+
+                            <th>
+                                Date & Time
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Payment
+                            </th>
+
+                            <th>
+                                Fraud Probability
+                            </th>
+
+                            <th>
+                                Prediction
+                            </th>
+
+                            <th>
+                                Risk Level
+                            </th>
+
+                            <th>
+                                Review Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% if transactions %}
+
+                            {% for transaction in transactions %}
+
+                            <tr>
+
+                                <td>
+                                    {{ transaction.transaction_id }}
+                                </td>
+
+                                <td>
+                                    {{ transaction.transaction_time }}
+                                </td>
+
+                                <td>
+                                    ₹{{ "%.2f"|format(transaction.transaction_amount) }}
+                                </td>
+
+                                <td>
+                                    {{ transaction.payment_channel }}
+                                </td>
+
+                                <td>
+                                    {{ "%.2f"|format(transaction.fraud_probability * 100) }}%
+                                </td>
+
+                                <td
+                                    data-fraud="{{ transaction.predicted_fraud }}"
+                                >
+
+                                    {% if transaction.predicted_fraud == 1 %}
+
+                                        <span class="status blocked">
+                                            Fraud
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status reviewed">
+                                            Normal
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td data-risk="{{ transaction.risk_level }}">
+
+                                    {% if transaction.risk_level == "Low" %}
+
+                                        <span class="risk-badge low">
+                                            Low
+                                        </span>
+
+                                    {% elif transaction.risk_level == "Medium" %}
+
+                                        <span class="risk-badge medium">
+                                            Medium
+                                        </span>
+
+                                    {% elif transaction.risk_level == "High" %}
+
+                                        <span class="risk-badge high">
+                                            High
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="risk-badge critical">
+                                            Critical
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if transaction.review_status == "Reviewed" %}
+
+                                        <span class="status reviewed">
+                                            Reviewed
+                                        </span>
+
+                                    {% elif transaction.review_status == "Blocked" %}
+
+                                        <span class="status blocked">
+                                            Blocked
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status pending">
+                                            Pending
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    <a
+                                        href="{{ url_for('transaction_detail', transaction_id=transaction.transaction_id) }}"
+                                        class="details-btn"
+                                    >
+                                        View
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td
+                                    colspan="9"
+                                    class="empty"
+                                >
+                                    No transactions available.
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+function filterTransactions() {
+
+    const search =
+        document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const risk =
+        document
+        .getElementById("riskFilter")
+        .value;
+
+    const fraud =
+        document
+        .getElementById("fraudFilter")
+        .value;
+
+    const rows =
+        document
+        .querySelectorAll("#transactionTable tbody tr");
+
+
+    rows.forEach(function(row) {
+
+        const transactionId =
+            row.cells[0]
+            ? row.cells[0].textContent
+                .toLowerCase()
+            : "";
+
+        const riskCell =
+            row.querySelector("[data-risk]");
+
+        const fraudCell =
+            row.querySelector("[data-fraud]");
+
+
+        const rowRisk =
+            riskCell
+            ? riskCell.getAttribute("data-risk")
+            : "";
+
+        const rowFraud =
+            fraudCell
+            ? fraudCell.getAttribute("data-fraud")
+            : "";
+
+
+        const matchesSearch =
+            transactionId.includes(search);
+
+        const matchesRisk =
+            risk === "all" ||
+            rowRisk === risk;
+
+        const matchesFraud =
+            fraud === "all" ||
+            rowFraud === fraud;
+
+
+        if (
+            matchesSearch &&
+            matchesRisk &&
+            matchesFraud
+        ) {
+
+            row.style.display = "";
+
+        } else {
+
+            row.style.display = "none";
+
+        }
+
+    });
+
+}
+
+</script>
+
+
+</body>
+
+</html>

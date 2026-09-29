@@ -1,0 +1,1153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Transaction Details - Fraud Detection System
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+
+        body {
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+
+        /* ==================================================
+           NAVBAR
+        ================================================== */
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        .navbar h2 {
+            font-size: 21px;
+        }
+
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+
+        .nav-links a:hover {
+            color: #60a5fa;
+        }
+
+
+        /* ==================================================
+           CONTAINER
+        ================================================== */
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+
+        .page-header h1 {
+            font-size: 28px;
+            margin-bottom: 7px;
+        }
+
+
+        .page-header p {
+            color: #6b7280;
+        }
+
+
+        /* ==================================================
+           CARD
+        ================================================== */
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+
+        /* ==================================================
+           DETAILS GRID
+        ================================================== */
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+
+        .detail {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+
+        .detail-label {
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 7px;
+            text-transform: uppercase;
+        }
+
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+
+        /* ==================================================
+           RISK BOX
+        ================================================== */
+
+        .risk-box {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+
+        .risk-low {
+            background: #ecfdf5;
+            border: 1px solid #10b981;
+        }
+
+
+        .risk-medium {
+            background: #fffbeb;
+            border: 1px solid #f59e0b;
+        }
+
+
+        .risk-high {
+            background: #fff7ed;
+            border: 1px solid #f97316;
+        }
+
+
+        .risk-critical {
+            background: #fef2f2;
+            border: 1px solid #ef4444;
+        }
+
+
+        .risk-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+
+        .probability {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+
+        /* ==================================================
+           RISK REASONS
+        ================================================== */
+
+        .reason-list {
+            margin-top: 10px;
+            padding-left: 22px;
+        }
+
+
+        .reason-list li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+
+        .no-reason {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+
+        /* ==================================================
+           ACTION BOX
+        ================================================== */
+
+        .action-box {
+            background: #eff6ff;
+            border: 1px solid #3b82f6;
+            padding: 18px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+
+        /* ==================================================
+           REVIEW FORM
+        ================================================== */
+
+        .review-form {
+            display: grid;
+            gap: 15px;
+        }
+
+
+        textarea {
+            width: 100%;
+            min-height: 110px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 12px;
+            resize: vertical;
+        }
+
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+        }
+
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+
+        /* ==================================================
+           DELETE BUTTON
+        ================================================== */
+
+        .delete-btn {
+            background: #dc2626;
+        }
+
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
+
+        /* ==================================================
+           BACK BUTTON
+        ================================================== */
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+
+        /* ==================================================
+           RESPONSIVE
+        ================================================== */
+
+        @media (max-width: 850px) {
+
+            .details-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+
+            .nav-links {
+                gap: 10px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ======================================================
+     NAVBAR
+====================================================== -->
+
+<nav class="navbar">
+
+    <h2>
+        Financial Fraud Detection System
+    </h2>
+
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+
+        <a href="{{ url_for('prediction') }}">
+            Prediction
+        </a>
+
+
+        <a href="{{ url_for('transactions') }}">
+            Transactions
+        </a>
+
+
+        <a href="{{ url_for('alerts') }}">
+            Alerts
+        </a>
+
+
+        <a href="{{ url_for('reports') }}">
+            Reports
+        </a>
+
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ======================================================
+     MAIN CONTAINER
+====================================================== -->
+
+<div class="container">
+
+
+    <a
+        class="back-btn"
+        href="{{ url_for('transactions') }}"
+    >
+        ← Back to Transactions
+    </a>
+
+
+    <div class="page-header">
+
+        <h1>
+            Transaction Details
+        </h1>
+
+        <p>
+            Detailed fraud analysis and transaction information
+        </p>
+
+    </div>
+
+
+    {% if transaction %}
+
+
+        {% set risk =
+            transaction.risk_level|default('Low', true)|lower
+        %}
+
+
+        {% set probability =
+            transaction.fraud_probability|default(0, true)
+        %}
+
+
+        <!-- ==================================================
+             RISK SUMMARY
+        ================================================== -->
+
+        <div class="card">
+
+
+            <div
+                class="risk-box
+                {% if risk == 'critical' %}
+                    risk-critical
+                {% elif risk == 'high' %}
+                    risk-high
+                {% elif risk == 'medium' %}
+                    risk-medium
+                {% else %}
+                    risk-low
+                {% endif %}"
+            >
+
+
+                <div class="risk-title">
+
+                    Risk Level:
+
+                    {{ transaction.risk_level|default(
+                        'Low',
+                        true
+                    )|upper }}
+
+                </div>
+
+
+                <div class="probability">
+
+                    {{
+                        "%.2f"|format(
+                            probability|float * 100
+                        )
+                    }}%
+
+                </div>
+
+
+                <div>
+
+                    Fraud Probability
+
+                </div>
+
+
+            </div>
+
+
+            <h2>
+                Transaction Information
+            </h2>
+
+
+            <div class="details-grid">
+
+
+                <!-- Transaction ID -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Transaction ID
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.transaction_id
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Transaction Time -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Transaction Time
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.transaction_time
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Customer ID -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Customer ID
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.customer_id
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Merchant ID -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Merchant ID
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.merchant_id
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Transaction Amount -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Transaction Amount
+                    </div>
+
+                    <div class="detail-value">
+
+                        ₹{{
+                            transaction.transaction_amount
+                            |default(0, true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Payment Channel -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Payment Channel
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.payment_channel
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Device Type -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Device Type
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.device_type
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Account Age -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Account Age
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.account_age_days
+                            |default('N/A', true)
+                        }}
+
+                        days
+
+                    </div>
+
+                </div>
+
+
+                <!-- Credit Score -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Credit Score Band
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.credit_score_band
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- KYC -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        KYC Level
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.kyc_level
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- International -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        International
+                    </div>
+
+                    <div class="detail-value">
+
+                        {% if transaction.is_international %}
+
+                            Yes
+
+                        {% else %}
+
+                            No
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- IP Risk -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        IP Risk Score
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.ip_risk_score
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- 1 Hour Transactions -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Transactions (1 Hour)
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.txn_count_1h
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- 24 Hour Transactions -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Transactions (24 Hours)
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.txn_count_24h
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Failed Transactions -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Failed Transactions (24 Hours)
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.failed_txn_count_24h
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Geo Distance -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Geo Distance
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.geo_distance_from_last_txn
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Merchant Risk -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Merchant Risk Score
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.merchant_risk_score
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Amount Deviation -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Amount Deviation
+                    </div>
+
+                    <div class="detail-value">
+
+                        {{
+                            transaction.amount_deviation_from_user_mean
+                            |default('N/A', true)
+                        }}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             REASONS FOR RISK
+        ================================================== -->
+
+        <div class="card">
+
+            <h2>
+                Reasons for Risk
+            </h2>
+
+
+            {% if transaction.risk_reasons %}
+
+
+                {% if transaction.risk_reasons is string %}
+
+                    {% set reasons =
+                        transaction.risk_reasons.split('|')
+                    %}
+
+
+                    <ul class="reason-list">
+
+
+                        {% for reason in reasons %}
+
+                            {% if reason.strip() %}
+
+                                <li>
+                                    {{ reason.strip() }}
+                                </li>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+
+                    </ul>
+
+
+                {% else %}
+
+
+                    <ul class="reason-list">
+
+
+                        {% for reason in transaction.risk_reasons %}
+
+                            {% if reason %}
+
+                                <li>
+                                    {{ reason }}
+                                </li>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+
+                    </ul>
+
+
+                {% endif %}
+
+
+            {% else %}
+
+
+                <p class="no-reason">
+
+                    No specific risk reasons available.
+
+                </p>
+
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ==================================================
+             RECOMMENDED ACTION
+        ================================================== -->
+
+        <div class="card">
+
+            <h2>
+                Recommended Action
+            </h2>
+
+
+            <div class="action-box">
+
+                {{
+                    transaction.recommended_action|default(
+                        'No recommended action available.',
+                        true
+                    )
+                }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             TRANSACTION REVIEW
+        ================================================== -->
+
+        <div class="card">
+
+            <h2>
+                Transaction Review
+            </h2>
+
+
+            <form
+                class="review-form"
+                method="POST"
+                action="{{ url_for(
+                    'review_transaction',
+                    transaction_id=transaction.transaction_id
+                ) }}"
+            >
+
+
+                <div>
+
+                    <label>
+                        <strong>
+                            Review Status
+                        </strong>
+                    </label>
+
+
+                    <select name="review_status">
+
+
+                        <option
+                            value="pending"
+                            {% if transaction.review_status == 'pending' %}
+                                selected
+                            {% endif %}
+                        >
+                            Pending
+                        </option>
+
+
+                        <option
+                            value="approved"
+                            {% if transaction.review_status == 'approved' %}
+                                selected
+                            {% endif %}
+                        >
+                            Approved
+                        </option>
+
+
+                        <option
+                            value="rejected"
+                            {% if transaction.review_status == 'rejected' %}
+                                selected
+                            {% endif %}
+                        >
+                            Rejected
+                        </option>
+
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+
+                        <strong>
+                            Review Comment
+                        </strong>
+
+                    </label>
+
+
+                    <textarea
+                        name="review_comment"
+                        placeholder="Enter review comments..."
+                    >{{ transaction.review_comment|default('', true) }}</textarea>
+
+                </div>
+
+
+                <button type="submit">
+
+                    Save Review
+
+                </button>
+
+
+            </form>
+
+        </div>
+
+
+        <!-- ==================================================
+             DELETE BUTTON - ADMIN ONLY
+        ================================================== -->
+
+        {% if session.get('role') == 'admin' %}
+
+        <div style="margin-top: 20px;">
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'delete_transaction_route',
+                    transaction_id=transaction.transaction_id
+                ) }}"
+                onsubmit="return confirmDelete();"
+            >
+
+                <button
+                    type="submit"
+                    class="delete-btn"
+                >
+                    Delete Transaction
+                </button>
+
+            </form>
+
+        </div>
+
+        {% endif %}
+
+
+    {% else %}
+
+
+        <!-- ==================================================
+             TRANSACTION NOT FOUND
+        ================================================== -->
+
+        <div class="card">
+
+            <h2>
+                Transaction Not Found
+            </h2>
+
+            <p>
+
+                The requested transaction could not be found.
+
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+<!-- ======================================================
+     DELETE CONFIRMATION
+====================================================== -->
+
+<script>
+
+function confirmDelete() {
+
+    return confirm(
+        "Are you sure you want to delete this transaction?"
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>

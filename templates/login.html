@@ -1,0 +1,1297 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Financial Fraud Detection</title>
+
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a 0%,
+                    #1e3a8a 50%,
+                    #2563eb 100%
+                );
+
+            padding: 20px;
+
+        }
+
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
+
+        .container {
+
+            width: 100%;
+
+            max-width: 430px;
+
+            background: #ffffff;
+
+            border-radius: 18px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.30);
+
+            animation: fadeIn 0.5s ease;
+
+        }
+
+
+        @keyframes fadeIn {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(15px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .logo {
+
+            width: 65px;
+
+            height: 65px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 30px;
+
+        }
+
+
+        .title {
+
+            text-align: center;
+
+            font-size: 27px;
+
+            font-weight: 700;
+
+            color: #0f172a;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            margin-bottom: 28px;
+
+        }
+
+
+        /* =====================================================
+           TABS
+        ===================================================== */
+
+        .tabs {
+
+            display: flex;
+
+            border-bottom: 1px solid #e2e8f0;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .tab {
+
+            width: 50%;
+
+            padding: 12px;
+
+            text-align: center;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            color: #64748b;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            border-bottom: 3px solid transparent;
+
+        }
+
+
+        .tab:hover {
+
+            color: #2563eb;
+
+        }
+
+
+        .tab.active {
+
+            color: #2563eb;
+
+            border-bottom-color: #2563eb;
+
+        }
+
+
+        /* =====================================================
+           SECTIONS
+        ===================================================== */
+
+        .section {
+
+            display: none;
+
+        }
+
+
+        .section.active {
+
+            display: block;
+
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .form-group {
+
+            margin-bottom: 17px;
+
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            color: #334155;
+
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            color: #0f172a;
+
+            background: #ffffff;
+
+            transition: 0.2s;
+
+        }
+
+
+        input:focus {
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px rgba(37, 99, 235, 0.10);
+
+        }
+
+
+        input::placeholder {
+
+            color: #94a3b8;
+
+        }
+
+
+        /* =====================================================
+           PASSWORD FIELD
+        ===================================================== */
+
+        .password-container {
+
+            position: relative;
+
+        }
+
+
+        .password-container input {
+
+            padding-right: 48px;
+
+        }
+
+
+        .eye {
+
+            position: absolute;
+
+            right: 14px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            cursor: pointer;
+
+            font-size: 18px;
+
+            color: #64748b;
+
+            user-select: none;
+
+        }
+
+
+        .eye:hover {
+
+            color: #2563eb;
+
+        }
+
+
+        /* =====================================================
+           BUTTON
+        ===================================================== */
+
+        .btn {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            margin-top: 5px;
+
+        }
+
+
+        .btn:hover {
+
+            background: #1d4ed8;
+
+            transform: translateY(-1px);
+
+        }
+
+
+        .btn:active {
+
+            transform: translateY(0);
+
+        }
+
+
+        /* =====================================================
+           FORGOT PASSWORD
+        ===================================================== */
+
+        .forgot {
+
+            text-align: right;
+
+            margin-top: -5px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .forgot a {
+
+            color: #2563eb;
+
+            font-size: 13px;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+        }
+
+
+        .forgot a:hover {
+
+            text-decoration: underline;
+
+        }
+
+
+        /* =====================================================
+           BACK TO LOGIN
+        ===================================================== */
+
+        .back-login {
+
+            text-align: center;
+
+            margin-top: 16px;
+
+        }
+
+
+        .back-login a {
+
+            color: #2563eb;
+
+            font-size: 13px;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+        }
+
+
+        .back-login a:hover {
+
+            text-decoration: underline;
+
+        }
+
+
+        /* =====================================================
+           MESSAGES
+        ===================================================== */
+
+        .message {
+
+            padding: 11px 13px;
+
+            border-radius: 8px;
+
+            margin-bottom: 18px;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+
+        }
+
+
+        .error-message {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            border: 1px solid #fecaca;
+
+        }
+
+
+        .success-message {
+
+            background: #dcfce7;
+
+            color: #166534;
+
+            border: 1px solid #bbf7d0;
+
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 25px;
+
+            padding-top: 18px;
+
+            border-top: 1px solid #e2e8f0;
+
+            font-size: 12px;
+
+            color: #94a3b8;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 480px) {
+
+            .container {
+
+                padding: 25px 20px;
+
+            }
+
+
+            .title {
+
+                font-size: 24px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="logo">
+        🛡️
+    </div>
+
+
+    <div class="title">
+        Financial Fraud Detection
+    </div>
+
+
+    <div class="subtitle">
+        Machine Learning Based Financial Transaction
+        Fraud Detection & Risk Intelligence System
+    </div>
+
+
+    <!-- =====================================================
+         TABS
+         ===================================================== -->
+
+    <div class="tabs">
+
+
+        <div
+            class="tab active"
+            id="loginTab"
+            onclick="showSection('loginSection', 'loginTab')"
+        >
+            Login
+        </div>
+
+
+        <div
+            class="tab"
+            id="signupTab"
+            onclick="showSection('signupSection', 'signupTab')"
+        >
+            Sign Up
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         FLASK ERROR MESSAGE
+         ===================================================== -->
+
+    {% if error %}
+
+        <div class="message error-message">
+
+            {{ error }}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         FLASK SUCCESS MESSAGE
+         ===================================================== -->
+
+    {% if message %}
+
+        <div class="message success-message">
+
+            {{ message }}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         LOGIN SECTION
+         ===================================================== -->
+
+    <div
+        id="loginSection"
+        class="section active"
+    >
+
+
+        <form
+            method="POST"
+            action="{{ url_for('login') }}"
+        >
+
+
+            <!-- USERNAME OR EMAIL -->
+
+            <div class="form-group">
+
+                <label for="identifier">
+
+                    Username or Email
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="identifier"
+                    name="identifier"
+                    placeholder="Enter username or email"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="loginPassword">
+
+                    Password
+
+                </label>
+
+
+                <div class="password-container">
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        name="password"
+                        placeholder="Enter password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+
+                    <span
+                        class="eye"
+                        onclick="togglePassword('loginPassword', this)"
+                    >
+                        👁
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- FORGOT PASSWORD -->
+
+            <div class="forgot">
+
+                <a
+                    onclick="showSection('forgotSection', null)"
+                >
+                    Forgot Password?
+                </a>
+
+            </div>
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="btn"
+            >
+
+                Login
+
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         SIGN UP SECTION
+         ===================================================== -->
+
+    <div
+        id="signupSection"
+        class="section"
+    >
+
+
+        <form
+            method="POST"
+            action="{{ url_for('signup') }}"
+            onsubmit="return validateSignup()"
+        >
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label for="signupUsername">
+
+                    Username
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="signupUsername"
+                    name="username"
+                    placeholder="Create username"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label for="signupEmail">
+
+                    Email
+
+                </label>
+
+
+                <input
+                    type="email"
+                    id="signupEmail"
+                    name="email"
+                    placeholder="Enter email address"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="signupPassword">
+
+                    Password
+
+                </label>
+
+
+                <div class="password-container">
+
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        name="password"
+                        placeholder="Create password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+
+                    <span
+                        class="eye"
+                        onclick="togglePassword('signupPassword', this)"
+                    >
+                        👁
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="confirmPassword">
+
+                    Confirm Password
+
+                </label>
+
+
+                <div class="password-container">
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirm_password"
+                        placeholder="Confirm password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+
+                    <span
+                        class="eye"
+                        onclick="togglePassword('confirmPassword', this)"
+                    >
+                        👁
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- SIGN UP BUTTON -->
+
+            <button
+                type="submit"
+                class="btn"
+            >
+
+                Create Account
+
+            </button>
+
+
+        </form>
+
+
+        <div class="back-login">
+
+            <a
+                onclick="showSection('loginSection', 'loginTab')"
+            >
+                Already have an account? Login
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         FORGOT PASSWORD SECTION
+         ===================================================== -->
+
+    <div
+        id="forgotSection"
+        class="section"
+    >
+
+
+        <form
+            method="POST"
+            action="{{ url_for('forgot_password') }}"
+        >
+
+
+            <div class="form-group">
+
+                <label for="forgotIdentifier">
+
+                    Username or Email
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="forgotIdentifier"
+                    name="identifier"
+                    placeholder="Enter username or email"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn"
+            >
+
+                Continue
+
+            </button>
+
+
+        </form>
+
+
+        <div class="back-login">
+
+            <a
+                onclick="showSection('loginSection', 'loginTab')"
+            >
+                ← Back to Login
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         RESET PASSWORD SECTION
+         ===================================================== -->
+
+    <div
+        id="resetSection"
+        class="section"
+    >
+
+
+        <form
+            method="POST"
+            action="{% if reset_token %}{{ url_for('reset_password', token=reset_token) }}{% else %}#{% endif %}"
+            onsubmit="return validateResetPassword()"
+        >
+
+
+            <!-- NEW PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="resetPassword">
+
+                    New Password
+
+                </label>
+
+
+                <div class="password-container">
+
+                    <input
+                        type="password"
+                        id="resetPassword"
+                        name="password"
+                        placeholder="Enter new password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+
+                    <span
+                        class="eye"
+                        onclick="togglePassword('resetPassword', this)"
+                    >
+                        👁
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="resetConfirmPassword">
+
+                    Confirm New Password
+
+                </label>
+
+
+                <div class="password-container">
+
+                    <input
+                        type="password"
+                        id="resetConfirmPassword"
+                        name="confirm_password"
+                        placeholder="Confirm new password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+
+                    <span
+                        class="eye"
+                        onclick="togglePassword('resetConfirmPassword', this)"
+                    >
+                        👁
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn"
+            >
+
+                Reset Password
+
+            </button>
+
+
+        </form>
+
+
+        <div class="back-login">
+
+            <a
+                onclick="showSection('loginSection', 'loginTab')"
+            >
+                ← Back to Login
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <div class="footer">
+
+        Secure Financial Transaction Risk Analysis
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+/* ============================================================
+   SHOW LOGIN / SIGNUP / FORGOT / RESET
+   ============================================================ */
+
+function showSection(sectionId, tabId = null) {
+
+
+    // Hide all sections
+
+    const sections =
+        document.querySelectorAll(".section");
+
+
+    sections.forEach(function(section) {
+
+        section.classList.remove("active");
+
+    });
+
+
+    // Show selected section
+
+    const selectedSection =
+        document.getElementById(sectionId);
+
+
+    if (selectedSection) {
+
+        selectedSection.classList.add("active");
+
+    }
+
+
+    // Remove active from tabs
+
+    const tabs =
+        document.querySelectorAll(".tab");
+
+
+    tabs.forEach(function(tab) {
+
+        tab.classList.remove("active");
+
+    });
+
+
+    // Activate selected tab
+
+    if (tabId) {
+
+        const selectedTab =
+            document.getElementById(tabId);
+
+
+        if (selectedTab) {
+
+            selectedTab.classList.add("active");
+
+        }
+
+    }
+
+}
+
+
+/* ============================================================
+   PASSWORD SHOW / HIDE
+   ============================================================ */
+
+function togglePassword(inputId, icon) {
+
+
+    const input =
+        document.getElementById(inputId);
+
+
+    if (!input) {
+
+        return;
+
+    }
+
+
+    if (input.type === "password") {
+
+        input.type = "text";
+
+        icon.textContent = "🙈";
+
+    }
+
+    else {
+
+        input.type = "password";
+
+        icon.textContent = "👁";
+
+    }
+
+}
+
+
+/* ============================================================
+   SIGNUP VALIDATION
+   ============================================================ */
+
+function validateSignup() {
+
+
+    const username =
+        document.getElementById("signupUsername").value.trim();
+
+
+    const email =
+        document.getElementById("signupEmail").value.trim();
+
+
+    const password =
+        document.getElementById("signupPassword").value;
+
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+
+    if (username.length < 3) {
+
+        alert("Username must contain at least 3 characters.");
+
+        return false;
+
+    }
+
+
+    if (!email.includes("@")) {
+
+        alert("Please enter a valid email address.");
+
+        return false;
+
+    }
+
+
+    if (password.length < 6) {
+
+        alert("Password must contain at least 6 characters.");
+
+        return false;
+
+    }
+
+
+    if (password !== confirmPassword) {
+
+        alert("Passwords do not match.");
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* ============================================================
+   RESET PASSWORD VALIDATION
+   ============================================================ */
+
+function validateResetPassword() {
+
+
+    const password =
+        document.getElementById("resetPassword").value;
+
+
+    const confirmPassword =
+        document.getElementById("resetConfirmPassword").value;
+
+
+    if (password.length < 6) {
+
+        alert("Password must contain at least 6 characters.");
+
+        return false;
+
+    }
+
+
+    if (password !== confirmPassword) {
+
+        alert("Passwords do not match.");
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

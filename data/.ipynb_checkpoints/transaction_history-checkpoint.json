@@ -1,0 +1,93 @@
+[
+    {
+        "transaction_id": "TXN-20260909195030501495",
+        "transaction_time": "2026-09-09 19:50:30.461607",
+        "transaction_amount": 5000.0,
+        "customer_id": 6,
+        "merchant_id": 2,
+        "payment_channel": "UPI",
+        "device_type": "Mobile",
+        "international": "No",
+        "fraud_probability": 0.30366625052789836,
+        "risk_level": "Medium Risk",
+        "prediction": "Review Recommended"
+    },
+    {
+        "transaction_id": "TXN-20260912184049317444",
+        "transaction_time": "2026-09-12 18:40:49.230925",
+        "transaction_amount": 5000.0,
+        "customer_id": 6,
+        "merchant_id": 2,
+        "payment_channel": "UPI",
+        "device_type": "Mobile",
+        "international": "No",
+        "fraud_probability": 0.3086766304540257,
+        "risk_level": "Medium Risk",
+        "prediction": "Review Recommended"
+    },
+    {
+        "transaction_id": "TXN-20260912184101830225",
+        "transaction_time": "2026-09-12 18:41:01.756146",
+        "transaction_amount": 5000.0,
+        "customer_id": 6,
+        "merchant_id": 2,
+        "payment_channel": "UPI",
+        "device_type": "Mobile",
+        "international": "No",
+        "fraud_probability": 0.39221672144400566,
+        "risk_level": "Medium Risk",
+        "prediction": "Review Recommended"
+    },
+    {
+        "transaction_id": "TXN-20260912184123311553",
+        "transaction_time": "2026-09-12 18:41:23.232471",
+        "transaction_amount": 500.0,
+        "customer_id": 6,
+        "merchant_id": 2,
+        "payment_channel": "UPI",
+        "device_type": "Mobile",
+        "international": "No",
+        "fraud_probability": 0.32427689261844883,
+        "risk_level": "Medium Risk",
+        "prediction": "Review Recommended"
+    },
+    {
+        "transaction_id": "TXN-20260912184150019087",
+        "transaction_time": "2026-09-12 18:41:49.948874",
+        "transaction_amount": 5000.0,
+        "customer_id": 6,
+        "merchant_id": 2,
+        "payment_channel": "Net Banking",
+        "device_type": "Mobile",
+        "international": "Yes",
+        "fraud_probability": 0.65,
+        "risk_level": "High Risk",
+        "prediction": "Suspicious Transaction"
+    },
+    {
+        "transaction_id": "TXN-20260912184205580304",
+        "transaction_time": "2026-09-12 18:42:05.507706",
+        "transaction_amount": 5000.0,
+        "customer_id": 6,
+        "merchant_id": 2,
+        "payment_channel": "Net Banking",
+        "device_type": "Mobile",
+        "international": "No",
+        "fraud_probability": 0.3558311369326581,
+        "risk_level": "Medium Risk",
+        "prediction": "Review Recommended"
+    },
+    {
+        "transaction_id": "TXN-20260912194747959701",
+        "transaction_time": "2026-09-12 19:47:47.868599",
+        "transaction_amount": 5000.0,
+        "customer_id": 6,
+        "merchant_id": 2,
+        "payment_channel": "Net Banking",
+        "device_type": "Mobile",
+        "international": "No",
+        "fraud_probability": 0.35601973759701455,
+        "risk_level": "Medium Risk",
+        "prediction": "Review Recommended"
+    }
+]
